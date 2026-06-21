@@ -49,59 +49,102 @@ const AddOpportunity = () => {
     }
   };
 
-  return (
-    <div className="p-10 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">
-        Add Opportunity
+ return (
+  <div className="max-w-2xl mx-auto p-6">
+    {/* Header */}
+    <div className="mb-8">
+      <h1 className="text-3xl font-bold text-slate-800">
+        Create Opportunity
       </h1>
+      <p className="text-gray-500 mt-1">
+        Find talented collaborators for your startup
+      </p>
+    </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+    {/* Form Card */}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white border rounded-2xl p-6 shadow-sm space-y-5"
+    >
+      <div>
+        <label className="text-sm text-gray-600">
+          Role Title
+        </label>
         <input
           name="role_title"
-          placeholder="Role Title"
+          placeholder="Frontend Developer"
           value={formData.role_title}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+      </div>
 
+      <div>
+        <label className="text-sm text-gray-600">
+          Required Skills
+        </label>
         <input
           name="required_skills"
-          placeholder="Skills (comma separated)"
+          placeholder="React, Node.js, MongoDB"
           value={formData.required_skills}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+      </div>
 
-        <input
+      <div>
+        <label className="text-sm text-gray-600">
+          Work Type
+        </label>
+
+        <select
           name="work_type"
-          placeholder="Work Type (Remote/Onsite)"
           value={formData.work_type}
           onChange={handleChange}
-          className="input input-bordered w-full"
-        />
+          className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">Select Work Type</option>
+          <option value="Remote">Remote</option>
+          <option value="Onsite">Onsite</option>
+          <option value="Hybrid">Hybrid</option>
+        </select>
+      </div>
 
+      <div>
+        <label className="text-sm text-gray-600">
+          Industry
+        </label>
         <input
           name="industry"
-          placeholder="Industry"
+          placeholder="Software, AI, Fintech"
           value={formData.industry}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+      </div>
 
+      <div>
+        <label className="text-sm text-gray-600">
+          Application Deadline
+        </label>
         <input
           type="date"
           name="deadline"
           value={formData.deadline}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+      </div>
 
-        <button className="btn btn-primary w-full">
-          Create Opportunity
-        </button>
-      </form>
-    </div>
-  );
+      <button
+        type="submit"
+        className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700"
+      >
+        Create Opportunity
+      </button>
+    </form>
+  </div>
+);
 };
 
 export default AddOpportunity;

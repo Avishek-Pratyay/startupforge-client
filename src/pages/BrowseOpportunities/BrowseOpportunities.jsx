@@ -18,7 +18,20 @@ const BrowseOpportunities = () => {
 
     fetchData();
   }, []);
+ const handleApply = async (opportunityId) => {
+  try {
+    await api.post("/applications", {
+      opportunity_id: opportunityId,
+      applicant_email: user.email, // ✅ FIXED
+      status: "Pending",
+      applied_at: new Date()
+    });
 
+    alert("Application submitted!");
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <div className="p-10">
       <div className="grid gap-4">

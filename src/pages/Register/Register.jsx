@@ -5,116 +5,163 @@ import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 
 const Register = () => {
-  const { registerUser, updateUserProfile } =
-    useAuth();
-
+  const {
+  registerUser,
+  updateUserProfile,
+  logoutUser,
+} = useAuth();
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+const handleRegister = async (e) => {
+  e.preventDefault();
 
-    setError("");
+  setError("");
 
-    const form = e.target;
+  const form = e.target;
 
-    const name = form.name.value;
-    const photo = form.photo.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const role = form.role.value;
+  const name = form.name.value;
+  const photo = form.photo.value;
+  const email = form.email.value;
+  const password = form.password.value;
+  const role = form.role.value;
 
-    try {
-      const result = await registerUser(
-        email,
-        password
-      );
+  try {
+    await registerUser(email, password);
 
-      await updateUserProfile(name, photo);
+    await updateUserProfile(name, photo);
 
-      await api.post("/users", {
-        name,
-        image: photo,
-        email,
-        role,
-      });
+    await api.post("/users", {
+      name,
+      image: photo,
+      email,
+      role,
+    });
 
-      navigate("/");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+    alert("Registration successful! Please login.");
+
+    await logoutUser();
+
+    navigate("/login");
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
   return (
-    <div className="max-w-md mx-auto mt-10 border p-6 rounded-xl">
+  <div className="min-h-[80vh] flex items-center justify-center px-4">
 
-      <h2 className="text-3xl font-bold mb-6">
-        Register
-      </h2>
+    <div className="w-full max-w-md bg-white border rounded-2xl shadow-sm p-8">
+
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-slate-800">
+          Create Account
+        </h2>
+
+        <p className="text-gray-500 mt-2">
+          Join StartupForge and build amazing startups
+        </p>
+      </div>
 
       <form
         onSubmit={handleRegister}
-        className="space-y-4"
+        className="space-y-5"
       >
 
-        <input
-          name="name"
-          placeholder="Name"
-          className="input input-bordered w-full"
-          required
-        />
+        <div>
+          <label className="text-sm text-gray-600">
+            Full Name
+          </label>
 
-        <input
-          name="photo"
-          placeholder="Photo URL"
-          className="input input-bordered w-full"
-          required
-        />
+          <input
+            name="name"
+            placeholder="John Doe"
+            className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
 
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          className="input input-bordered w-full"
-          required
-        />
+        <div>
+          <label className="text-sm text-gray-600">
+            Photo URL
+          </label>
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="input input-bordered w-full"
-          required
-        />
+          <input
+            name="photo"
+            placeholder="https://..."
+            className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
 
-        <select
-          name="role"
-          className="select select-bordered w-full"
+        <div>
+          <label className="text-sm text-gray-600">
+            Email
+          </label>
+
+          <input
+            name="email"
+            type="email"
+            placeholder="example@email.com"
+            className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="text-sm text-gray-600">
+            Password
+          </label>
+
+          <input
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="text-sm text-gray-600">
+            Account Type
+          </label>
+
+          <select
+            name="role"
+            className="w-full mt-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="founder">
+              Founder
+            </option>
+
+            <option value="collaborator">
+              Collaborator
+            </option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700"
         >
-          <option value="founder">
-            Founder
-          </option>
-
-          <option value="collaborator">
-            Collaborator
-          </option>
-        </select>
-
-        <button className="btn btn-primary w-full">
-          Register
+          Create Account
         </button>
 
       </form>
+     
 
       {error && (
-        <p className="text-red-500 mt-4">
+        <p className="text-red-500 mt-4 text-sm">
           {error}
         </p>
       )}
 
     </div>
-  );
+
+  </div>
+);
 };
 
 export default Register;

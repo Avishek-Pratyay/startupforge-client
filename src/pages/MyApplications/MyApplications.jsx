@@ -3,26 +3,27 @@ import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 
 const MyApplications = () => {
-  const { user } = useAuth();
+const { dbUser } = useAuth();
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const res = await api.get(
-          `/my-applications/${user.email}`
-        );
+  const res = await api.get(
+    `/my-applications/${dbUser.email}`
+  );
 
-        setApplications(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  console.log("Applications:", res.data);
 
-    if (user?.email) {
+  setApplications(res.data);
+} catch (error) {
+  console.log(error);
+}};
+
+    if (dbUser?.email) {
       fetchApplications();
     }
-  }, [user]);
+  }, [dbUser]);
 
   return (
     <div className="p-10">
@@ -30,34 +31,46 @@ const MyApplications = () => {
         My Applications
       </h1>
 
-      <div className="space-y-4">
-        {applications.map((app) => (
-          <div
-            key={app._id}
-            className="border p-4 rounded"
-          >
-            <p>
-              <b>Opportunity ID:</b>{" "}
-              {app.opportunity_id}
-            </p>
+<div className="space-y-4">
 
-            <p>
-              <b>Status:</b>{" "}
-              <span
-                className={
-                  app.status === "Accepted"
-                    ? "text-green-600"
-                    : app.status === "Rejected"
-                    ? "text-red-600"
-                    : "text-yellow-600"
-                }
-              >
-                {app.status}
-              </span>
+  {applications.length === 0 ? (
+    <p className="text-gray-500">
+      You have not applied to any opportunities yet.
+    </p>
+  ) : (
+    applications.map((app) => (
+      <div
+        key={app._id}
+        className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="font-semibold text-lg text-slate-800">
+              Opportunity Applied
+            </h3>
+
+            <p className="text-gray-500 text-sm mt-1">
+              ID: {app.opportunity_id}
             </p>
           </div>
-        ))}
+
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              app.status === "Accepted"
+                ? "bg-green-100 text-green-700"
+                : app.status === "Rejected"
+                ? "bg-red-100 text-red-700"
+                : "bg-yellow-100 text-yellow-700"
+            }`}
+          >
+            {app.status}
+          </span>
+        </div>
       </div>
+    ))
+  )}
+
+</div>
     </div>
   );
 };
