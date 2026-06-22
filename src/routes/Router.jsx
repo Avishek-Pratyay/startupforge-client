@@ -23,6 +23,7 @@ import EditStartup from "../pages/FounderDashboard/EditStartup";
 import EditOpportunity from "../pages/FounderDashboard/EditOpportunity";
 import CollaboratorDashboard from "../pages/CollaboratorDashboard/CollaboratorDashboard";
 import OpportunityDetails from "../pages/OpportunityDetails/OpportunityDetails";
+import StartupDetails from "../pages/StartupDetails/StartupDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       </AdminRoute>
     </PrivateRoute>
   ),
+},
+{
+  path: "/startup/:id",
+  element: <StartupDetails />,
 },
 {
   path: "/opportunities/:id",
