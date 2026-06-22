@@ -21,6 +21,8 @@ import MyApplications from "../pages/MyApplications/MyApplications";
 import Applications from "../pages/FounderDashboard/Applications";
 import EditStartup from "../pages/FounderDashboard/EditStartup";
 import EditOpportunity from "../pages/FounderDashboard/EditOpportunity";
+import CollaboratorDashboard from "../pages/CollaboratorDashboard/CollaboratorDashboard";
+import OpportunityDetails from "../pages/OpportunityDetails/OpportunityDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 const router = createBrowserRouter([
   {
@@ -39,6 +41,22 @@ const router = createBrowserRouter([
       <AdminRoute>
         <AdminDashboard />
       </AdminRoute>
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/opportunities/:id",
+  element: (
+    <PrivateRoute>
+      <OpportunityDetails />
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/collaborator-dashboard",
+  element: (
+    <PrivateRoute>
+      <CollaboratorDashboard />
     </PrivateRoute>
   ),
 },

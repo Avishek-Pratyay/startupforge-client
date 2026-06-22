@@ -1,76 +1,107 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
+import {
+  FaBriefcase,
+  FaBuilding,
+  FaCalendarAlt,
+} from "react-icons/fa";
 
 const MyApplications = () => {
-const { dbUser } = useAuth();
+  const { dbUser } = useAuth();
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
+    if (!dbUser?.email) return;
+
     const fetchApplications = async () => {
       try {
-  const res = await api.get(
-    `/my-applications/${dbUser.email}`
-  );
+        const res = await api.get(
+          `/my-applications/${dbUser.email}`
+        );
 
-  console.log("Applications:", res.data);
+        // IMPORTANT FIX: always ensure array
+        setApplications(res.data || []);
+      } catch (error) {
+        console.log("MY APPLICATIONS ERROR:", error);
+        setApplications([]);
+      }
+    };
 
-  setApplications(res.data);
-} catch (error) {
-  console.log(error);
-}};
-
-    if (dbUser?.email) {
-      fetchApplications();
-    }
-  }, [dbUser]);
+    fetchApplications();
+  }, [dbUser?.email]);
 
   return (
-    <div className="p-10">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="max-w-5xl mx-auto p-6">
+
+      <h1 className="text-3xl font-bold mb-8">
         My Applications
       </h1>
 
-<div className="space-y-4">
-
-  {applications.length === 0 ? (
-    <p className="text-gray-500">
-      You have not applied to any opportunities yet.
-    </p>
-  ) : (
-    applications.map((app) => (
-      <div
-        key={app._id}
-        className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition"
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="font-semibold text-lg text-slate-800">
-              Opportunity Applied
-            </h3>
-
-            <p className="text-gray-500 text-sm mt-1">
-              ID: {app.opportunity_id}
-            </p>
-          </div>
-
-          <span
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
-              app.status === "Accepted"
-                ? "bg-green-100 text-green-700"
-                : app.status === "Rejected"
-                ? "bg-red-100 text-red-700"
-                : "bg-yellow-100 text-yellow-700"
-            }`}
-          >
-            {app.status}
-          </span>
+      {applications.length === 0 ? (
+        <div className="bg-white rounded-2xl p-8 text-center shadow-sm">
+          <p className="text-gray-500">
+            You have not applied to any opportunities yet.
+          </p>
         </div>
-      </div>
-    ))
-  )}
+      ) : (
+        <div className="grid gap-5">
 
-</div>
+          {applications.map((app) => (
+            <div
+              key={app._id}
+              className="bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
+            >
+
+              <div className="flex justify-between items-start">
+
+                {/* LEFT SIDE */}
+                <div className="space-y-2">
+
+                  {/* OPPORTUNITY NAME */}
+                  <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <FaBriefcase />
+                    {app.role_title || "Opportunity"}
+                  </h2>
+
+                  {/* STARTUP NAME (FIXED) */}
+                  <p className="text-gray-600 flex items-center gap-2">
+                    <FaBuilding />
+                    {app.startup_name ||
+                      app.startup_id ||
+                      "Startup"}
+                  </p>
+
+                  {/* DATE SAFETY FIX */}
+                  <p className="text-gray-500 flex items-center gap-2">
+                    <FaCalendarAlt />
+                    Applied:{" "}
+                    {app.applied_at
+                      ? new Date(app.applied_at).toLocaleDateString()
+                      : "N/A"}
+                  </p>
+
+                </div>
+
+                {/* STATUS */}
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                    app.status === "Accepted"
+                      ? "bg-green-100 text-green-700"
+                      : app.status === "Rejected"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-yellow-100 text-yellow-700"
+                  }`}
+                >
+                  {app.status || "Pending"}
+                </span>
+
+              </div>
+            </div>
+          ))}
+
+        </div>
+      )}
     </div>
   );
 };

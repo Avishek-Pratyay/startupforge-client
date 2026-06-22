@@ -51,6 +51,7 @@ const Navbar = () => {
               >
                 Login
               </Link>
+              
 
               <Link
                 to="/register"
@@ -77,7 +78,7 @@ const Navbar = () => {
                     ? "/admin-dashboard"
                     :dbUser?.role === "founder"
                     ? "/founder-dashboard"
-                    : "/my-applications"
+                    : "/collaborator-dashboard"
                 }
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
               >
