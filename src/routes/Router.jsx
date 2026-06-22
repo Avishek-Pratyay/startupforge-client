@@ -18,6 +18,9 @@ import FounderDashboard from "../pages/FounderDashboard/FounderDashboard";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import AddStartup from "../pages/FounderDashboard/AddStartup";
 import MyApplications from "../pages/MyApplications/MyApplications";
+import Applications from "../pages/FounderDashboard/Applications";
+import EditStartup from "../pages/FounderDashboard/EditStartup";
+import EditOpportunity from "../pages/FounderDashboard/EditOpportunity";
 import DashboardLayout from "../layouts/DashboardLayout";
 const router = createBrowserRouter([
   {
@@ -36,6 +39,36 @@ const router = createBrowserRouter([
       <AdminRoute>
         <AdminDashboard />
       </AdminRoute>
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/dashboard/edit-opportunity/:id",
+  element: (
+    <PrivateRoute>
+      <FounderRoute>
+        <EditOpportunity />
+      </FounderRoute>
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/dashboard/edit-startup/:id",
+  element: (
+    <PrivateRoute>
+      <FounderRoute>
+        <EditStartup />
+      </FounderRoute>
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/founder-applications",
+  element: (
+    <PrivateRoute>
+      <FounderRoute>
+        <Applications />
+      </FounderRoute>
     </PrivateRoute>
   ),
 },
