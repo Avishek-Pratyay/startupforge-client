@@ -2,108 +2,242 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import {
-  FaBriefcase,
-  FaBuilding,
-  FaCalendarAlt,
+FaBriefcase,
+FaBuilding,
+FaCalendarAlt,
+FaLink,
+FaCheckCircle,
+FaClock,
+FaTimesCircle,
 } from "react-icons/fa";
 
 const MyApplications = () => {
-  const { dbUser } = useAuth();
-  const [applications, setApplications] = useState([]);
+const { dbUser } = useAuth();
 
-  useEffect(() => {
-    if (!dbUser?.email) return;
+const [applications, setApplications] = useState([]);
 
-    const fetchApplications = async () => {
-      try {
-        const res = await api.get(
-          `/my-applications/${dbUser.email}`
-        );
+useEffect(() => {
+if (!dbUser?.email) return;
 
-        // IMPORTANT FIX: always ensure array
-        setApplications(res.data || []);
-      } catch (error) {
-        console.log("MY APPLICATIONS ERROR:", error);
-        setApplications([]);
-      }
-    };
 
-    fetchApplications();
-  }, [dbUser?.email]);
+const fetchApplications = async () => {
+  try {
+    const res = await api.get(
+      `/my-applications/${dbUser.email}`
+    );
 
-  return (
-    <div className="max-w-5xl mx-auto p-6">
+    setApplications(res.data || []);
+  } catch (error) {
+    console.log(error);
+    setApplications([]);
+  }
+};
 
-      <h1 className="text-3xl font-bold mb-8">
+fetchApplications();
+
+
+}, [dbUser?.email]);
+
+const acceptedCount = applications.filter(
+(a) => a.status === "Accepted"
+).length;
+
+const rejectedCount = applications.filter(
+(a) => a.status === "Rejected"
+).length;
+
+const pendingCount = applications.filter(
+(a) =>
+!a.status ||
+a.status === "Pending"
+).length;
+
+return ( <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-6">
+
+
+  <div className="max-w-6xl mx-auto">
+
+    {/* HEADER */}
+    <div className="mb-10 text-center">
+      <h1 className="text-4xl font-bold text-white">
         My Applications
       </h1>
 
-      {applications.length === 0 ? (
-        <div className="bg-white rounded-2xl p-8 text-center shadow-sm">
-          <p className="text-gray-500">
-            You have not applied to any opportunities yet.
-          </p>
-        </div>
-      ) : (
-        <div className="grid gap-5">
+      <p className="text-gray-300 mt-2">
+        Track all opportunities you have applied for.
+      </p>
+    </div>
 
-          {applications.map((app) => (
-            <div
-              key={app._id}
-              className="bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
-            >
+    {/* STATS */}
+    <div className="grid md:grid-cols-4 gap-5 mb-8">
 
-              <div className="flex justify-between items-start">
+      <div className="bg-indigo-600 text-white rounded-2xl p-5 shadow-lg">
+        <p className="text-sm opacity-80">
+          Total Applications
+        </p>
 
-                {/* LEFT SIDE */}
-                <div className="space-y-2">
+        <h2 className="text-3xl font-bold mt-2">
+          {applications.length}
+        </h2>
+      </div>
 
-                  {/* OPPORTUNITY NAME */}
-                  <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <FaBriefcase />
-                    {app.role_title || "Opportunity"}
-                  </h2>
+      <div className="bg-green-600 text-white rounded-2xl p-5 shadow-lg">
+        <p className="text-sm opacity-80">
+          Accepted
+        </p>
 
-                  {/* STARTUP NAME (FIXED) */}
-                  <p className="text-gray-600 flex items-center gap-2">
+        <h2 className="text-3xl font-bold mt-2">
+          {acceptedCount}
+        </h2>
+      </div>
+
+      <div className="bg-yellow-500 text-white rounded-2xl p-5 shadow-lg">
+        <p className="text-sm opacity-80">
+          Pending
+        </p>
+
+        <h2 className="text-3xl font-bold mt-2">
+          {pendingCount}
+        </h2>
+      </div>
+
+      <div className="bg-red-600 text-white rounded-2xl p-5 shadow-lg">
+        <p className="text-sm opacity-80">
+          Rejected
+        </p>
+
+        <h2 className="text-3xl font-bold mt-2">
+          {rejectedCount}
+        </h2>
+      </div>
+
+    </div>
+
+    {applications.length === 0 ? (
+
+      <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-10 text-center">
+        <h2 className="text-2xl font-bold text-white mb-3">
+          No Applications Yet
+        </h2>
+
+        <p className="text-gray-300">
+          You haven't applied to any opportunities yet.
+        </p>
+      </div>
+
+    ) : (
+
+      <div className="grid gap-6">
+
+        {applications.map((app) => (
+
+          <div
+            key={app._id}
+            className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl hover:scale-[1.01] transition"
+          >
+
+            <div className="flex flex-col lg:flex-row lg:justify-between gap-5">
+
+              {/* LEFT */}
+              <div className="flex-1">
+
+                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                  <FaBriefcase />
+                  {app.role_title || "Opportunity"}
+                </h2>
+
+                <div className="mt-4 space-y-3">
+
+                  <p className="text-gray-300 flex items-center gap-2">
                     <FaBuilding />
-                    {app.startup_name ||
-                      app.startup_id ||
-                      "Startup"}
+                    <span className="font-medium">
+                      Startup:
+                    </span>
+                    {app.startup_name || "N/A"}
                   </p>
 
-                  {/* DATE SAFETY FIX */}
-                  <p className="text-gray-500 flex items-center gap-2">
+                  <p className="text-gray-300 flex items-center gap-2">
                     <FaCalendarAlt />
-                    Applied:{" "}
+                    <span className="font-medium">
+                      Applied:
+                    </span>
                     {app.applied_at
-                      ? new Date(app.applied_at).toLocaleDateString()
+                      ? new Date(
+                          app.applied_at
+                        ).toLocaleDateString()
                       : "N/A"}
                   </p>
 
+                  {app.portfolio_link && (
+                    <p className="text-gray-300 flex items-center gap-2">
+                      <FaLink />
+                      <span className="font-medium">
+                        Portfolio:
+                      </span>
+
+                      <a
+                        href={app.portfolio_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-indigo-300 hover:underline"
+                      >
+                        View Portfolio
+                      </a>
+                    </p>
+                  )}
+
+                  {app.motivation && (
+                    <div className="mt-4">
+                      <p className="text-sm font-semibold text-indigo-300 mb-1">
+                        Motivation Message
+                      </p>
+
+                      <p className="text-gray-300 text-sm bg-black/20 rounded-xl p-3">
+                        {app.motivation}
+                      </p>
+                    </div>
+                  )}
+
                 </div>
 
-                {/* STATUS */}
-                <span
-                  className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                    app.status === "Accepted"
-                      ? "bg-green-100 text-green-700"
-                      : app.status === "Rejected"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {app.status || "Pending"}
-                </span>
+              </div>
+
+              {/* STATUS */}
+              <div>
+
+                {app.status === "Accepted" ? (
+                  <div className="bg-green-500/20 border border-green-500/30 text-green-300 px-5 py-3 rounded-2xl flex items-center gap-2 font-semibold">
+                    <FaCheckCircle />
+                    Accepted
+                  </div>
+                ) : app.status === "Rejected" ? (
+                  <div className="bg-red-500/20 border border-red-500/30 text-red-300 px-5 py-3 rounded-2xl flex items-center gap-2 font-semibold">
+                    <FaTimesCircle />
+                    Rejected
+                  </div>
+                ) : (
+                  <div className="bg-yellow-500/20 border border-yellow-500/30 text-yellow-300 px-5 py-3 rounded-2xl flex items-center gap-2 font-semibold">
+                    <FaClock />
+                    Pending
+                  </div>
+                )}
 
               </div>
-            </div>
-          ))}
 
-        </div>
-      )}
-    </div>
-  );
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    )}
+
+  </div>
+</div>
+
+);
 };
 
 export default MyApplications;

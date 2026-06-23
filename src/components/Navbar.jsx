@@ -31,12 +31,18 @@ const Navbar = () => {
           </Link>
 
           {user && (
-            <Link
-              className="hover:text-indigo-600"
-              to="/my-applications"
-            >
-              Applications
-            </Link>
+            <Link className="hover:text-indigo-600"
+                to={
+                  dbUser?.role === "admin"
+                    ? "/my-applications"
+                    :dbUser?.role === "founder"
+                    ? "/founder-applications"
+                    : "/my-applications"
+                }
+                
+              >
+                Applications
+              </Link>
           )}
         </div>
 
@@ -72,6 +78,20 @@ const Navbar = () => {
                 </p>
               </div>
 
+              
+              <Link
+                to={
+                  dbUser?.role === "admin"
+                    ? "/profile"
+                    :dbUser?.role === "founder"
+                    ? "/profile"
+                    : "/profile"
+                }
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              >
+                Profile
+              </Link>
+
               <Link
                 to={
                   dbUser?.role === "admin"
@@ -87,6 +107,7 @@ const Navbar = () => {
 
               <button
                 onClick={logoutUser}
+                to="/login"
                 className="px-4 py-2 border rounded-lg hover:bg-gray-100"
               >
                 Logout

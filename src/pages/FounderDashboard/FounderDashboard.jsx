@@ -84,8 +84,10 @@ const acceptedMembers = applications.filter(
         <h1 className="text-3xl font-bold text-slate-800">
           Founder Dashboard
         </h1>
+        
 
         <div className="flex gap-3">
+          
           <Link
             to="/dashboard/add-startup"
             className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700"

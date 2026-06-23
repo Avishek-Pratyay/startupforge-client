@@ -57,17 +57,6 @@ const CollaboratorDashboard = () => {
         🚀 Collaborator Dashboard
       </h1>
 
-            {/* =========================
-          PROFILE BUTTON
-      ========================== */}
-      <div className="mt-10 text-center">
-        <Link
-          to="/profile"
-          className="inline-block bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-xl font-semibold"
-        >
-          Update Profile
-        </Link>
-      </div>
 
       {/* =========================
           SECTION 1: OPPORTUNITIES
