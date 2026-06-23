@@ -112,17 +112,15 @@ return ( <div>
     {startup.startup_name}
   </h3>
 
-  <p className="mt-2 text-gray-600">
-    Founder: {startup.founderName || startup.founderEmail}
-  </p>
+ 
 
   <p className="text-gray-600">
     Industry: {startup.industry}
   </p>
-
   <p className="text-gray-600">
-    Stage: {startup.funding_stage}
+             Created At:   {new Date(startup.createdAt).toLocaleDateString()}
   </p>
+
 
   <Link
     to={`/startup/${startup._id}`}
