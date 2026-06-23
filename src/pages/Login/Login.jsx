@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
@@ -10,6 +10,9 @@ const Login = () => {
   const { loginUser, googleLogin } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
+const from =
+  location.state?.from || "/";
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +36,7 @@ const Login = () => {
             toast.success("Login successful!");
 
 
-      navigate("/");
+      navigate(from,{replace: true});
     } catch (err) {
   toast.error("Invalid email or password");
 }finally {
@@ -59,9 +62,9 @@ const Login = () => {
         email: user.email,
       });
 
-      navigate("/");
+      navigate(from);
     } catch (err) {
-      toast.Error("Google Login Failed");
+      toast.error("Google Login Failed");
     }
   };
 
