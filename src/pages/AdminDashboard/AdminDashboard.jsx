@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
-
+import toast from "react-hot-toast";
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
@@ -36,31 +36,56 @@ const AdminDashboard = () => {
   }, []);
 
   // ================= USER ACTIONS =================
-  const blockUser = async (id) => {
+const blockUser = async (id) => {
+  try {
     await api.patch(`/admin/users/block/${id}`);
+    toast.success("User blocked successfully");
     loadAll();
-  };
+  } catch (err) {
+    toast.error("Failed to block user");
+  }
+};
 
-  const unblockUser = async (id) => {
+const unblockUser = async (id) => {
+  try {
     await api.patch(`/admin/users/unblock/${id}`);
+    toast.success("User unblocked successfully");
     loadAll();
-  };
+  } catch (err) {
+    toast.error("Failed to unblock user");
+  }
+};
 
-  // ================= STARTUP ACTIONS =================
-  const approveStartup = async (id) => {
+const approveStartup = async (id) => {
+  try {
     await api.patch(`/admin/startups/approve/${id}`);
+    toast.success("Startup approved successfully");
     loadAll();
-  };
+  } catch (err) {
+    toast.error("Failed to approve startup");
+  }
+};
 
-  const deleteStartup = async (id) => {
+const deleteStartup = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this startup?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
     await api.delete(`/admin/startups/${id}`);
+    toast.success("Startup deleted successfully");
     loadAll();
-  };
+  } catch (err) {
+    toast.error("Failed to delete startup");
+  }
+};
 
   // ================= UI =================
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-
+<div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-6">
+  <div className="max-w-7xl mx-auto">
       {/* HEADER */}
       <h1 className="text-3xl font-bold mb-6">
         Admin Dashboard
@@ -69,17 +94,37 @@ const AdminDashboard = () => {
       {/* ================= STATS ================= */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="p-4 bg-white shadow rounded-xl">
-            Users {stats.totalUsers}
+<div className="p-6 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl hover:bg-white/15 transition">
+  <p className="text-gray-300 text-sm">
+    Total Users
+  </p>
+  <h3 className="text-3xl font-bold text-white mt-2">
+    {stats.totalUsers}
+  </h3>
+</div>
+<div className="p-6 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl hover:bg-white/15 transition">
+           <p className="text-gray-300 text-sm">
+    Total StartUp
+  </p>
+  <h3 className="text-3xl font-bold text-white mt-2">
+    {stats.totalStartups}
+  </h3>
           </div>
-          <div className="p-4 bg-white shadow rounded-xl">
-            Startups {stats.totalStartups}
+          <div className="p-6 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl hover:bg-white/15 transition">
+           <p className="text-gray-300 text-sm">
+    Total Opportunities
+  </p>
+  <h3 className="text-3xl font-bold text-white mt-2">
+    {stats.totalOpportunities}
+  </h3>
           </div>
-          <div className="p-4 bg-white shadow rounded-xl">
-            Opportunities {stats.totalOpportunities}
-          </div>
-          <div className="p-4 bg-white shadow rounded-xl">
-            Revenue ${stats.totalRevenue}
+         <div className="p-6 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl hover:bg-white/15 transition">
+           <p className="text-gray-300 text-sm">
+    Total Reevenue $
+  </p>
+  <h3 className="text-3xl font-bold text-white mt-2">
+    {stats.totalRevenue}
+  </h3>
           </div>
         </div>
       )}
@@ -126,13 +171,20 @@ const AdminDashboard = () => {
           {users.map((u) => (
             <div
               key={u._id}
-              className="p-4 bg-white rounded-xl shadow flex justify-between"
+              className="p-5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex justify-between items-center hover:bg-white/15 transition"
             >
               <div>
-                <p className="font-bold">{u.name}</p>
-                <p className="text-sm text-gray-500">
-                  {u.email}
-                </p>
+               <p className="font-bold text-white">
+  {u.name}
+</p>
+
+<p className="text-sm text-gray-300">
+  {u.email}
+</p>
+
+<p className="text-xs text-indigo-300 capitalize mt-1">
+  {u.role}
+</p>
               </div>
 
               <div className="flex gap-2">
@@ -170,18 +222,20 @@ const AdminDashboard = () => {
           {startups.map((s) => (
             <div
               key={s._id}
-              className="p-4 bg-white rounded-xl shadow flex justify-between"
+              className="p-5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex justify-between items-center hover:bg-white/15 transition"
             >
               <div>
-                <h3 className="font-bold">
-                  {s.startup_name}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  {s.industry}
-                </p>
-                <p className="text-xs text-gray-400">
-                  Status: {s.status}
-                </p>
+                <p className="text-red">
+  {s.startup_name}
+</p>
+
+<p className="text-sm text-gray-300">
+  {s.industry}
+</p>
+
+<p className="text- text-indigo-300">
+  Status: {s.status}
+</p>
               </div>
 
               <div className="flex gap-2">
@@ -295,7 +349,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
-
+</div>
     </div>
   );
 };
