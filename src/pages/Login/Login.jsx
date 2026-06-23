@@ -30,6 +30,8 @@ const Login = () => {
       await loginUser(email, password);
 
       await api.post("/jwt", { email });
+            toast.success("Login successful!");
+
 
       navigate("/");
     } catch (err) {
@@ -59,7 +61,7 @@ const Login = () => {
 
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      toast.Error("Google Login Failed");
     }
   };
 
@@ -125,6 +127,15 @@ const Login = () => {
           </button>
 
         </form>
+        <p className="text-white text-center mt-4 text-sm">
+  New here?{" "}
+  <span
+    onClick={() => navigate("/register")}
+    className="text-indigo-600 cursor-pointer font-semibold hover:underline"
+  >
+    Create an account
+  </span>
+</p>
 
         {/* ERROR */}
         {error && (
