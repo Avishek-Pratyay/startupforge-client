@@ -14,7 +14,7 @@ import {
 
 import auth from "../firebase/firebase.config";
 import api from "../services/api";
-
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
@@ -41,6 +41,11 @@ const AuthProvider = ({ children }) => {
       password
     );
   };
+  const googleProvider = new GoogleAuthProvider();
+
+const googleLogin = () => {
+  return signInWithPopup(auth, googleProvider);
+};
 
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
@@ -90,6 +95,7 @@ const AuthProvider = ({ children }) => {
     loading,
     registerUser,
     loginUser,
+    googleLogin,
     logoutUser,
     updateUserProfile,
   };
