@@ -19,7 +19,7 @@ const [page, setPage] = useState(1);
 const [totalPages, setTotalPages] = useState(1);
 const [showModal, setShowModal] = useState(false);
 const [selectedOpportunity, setSelectedOpportunity] = useState(null);
-
+const [loading, setLoading] = useState(true);
 const [applicationForm, setApplicationForm] = useState({
 portfolio_link: "",
 motivation: "",
@@ -28,6 +28,10 @@ motivation: "",
 useEffect(() => {
   const fetchOpportunities = async () => {
     try {
+          setLoading(true);
+          
+    
+
       const res = await api.get("/opportunities", {
         params: {
           search,
@@ -43,6 +47,7 @@ useEffect(() => {
     } catch (error) {
       console.log(error);
     }
+    finally{setLoading (false);}
   };
 
   fetchOpportunities();
@@ -130,6 +135,13 @@ motivation: applicationForm.motivation,
 
 
 };
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+}
 
 return ( <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-10">
 

@@ -6,9 +6,9 @@ const { user, loading } = useAuth();
 const location = useLocation();
 
 if (loading) {
-return ( <div className="text-center mt-10">
-Loading... </div>
-);
+return<div className="min-h-screen flex items-center justify-center">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
 }
 
 if (!user) {

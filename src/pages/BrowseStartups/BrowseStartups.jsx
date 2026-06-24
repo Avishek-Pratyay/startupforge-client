@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import api from "../../services/api";
 
 const BrowseStartups = () => {
-  const [startups, setStartups] = useState([]);
-
+const [startups, setStartups] = useState([]);
+const [loading, setLoading] = useState(true);
   useEffect(() => {
     const loadStartups = async () => {
       try {
+        setLoading(true);
         const res = await api.get("/startups");
 
         const approved = res.data.filter(
@@ -20,10 +21,20 @@ const BrowseStartups = () => {
       } catch (error) {
         console.log(error);
       }
+      finally{
+        setLoading(false);
+      }
     };
 
     loadStartups();
   }, []);
+  if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 py-12 px-6">
