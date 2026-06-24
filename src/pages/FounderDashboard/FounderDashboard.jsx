@@ -128,9 +128,31 @@ const acceptedMembers = applications.filter(
 
       {/* HEADER */}
 <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white mb-10 shadow-xl">
-  <h1 className="text-4xl font-bold">
-    Founder Dashboard 🚀
+  <div className="flex items-center gap-3">
+  <h1 className="text-3xl font-bold text-slate-800">
+    Founder Dashboard
   </h1>
+
+  {dbUser?.isPremiumFounder && (
+    <span
+      className="
+      px-4 py-1
+      rounded-full
+      bg-gradient-to-r
+      from-yellow-400
+      via-orange-500
+      to-yellow-600
+      text-white
+      text-sm
+      font-semibold
+      shadow-md
+      animate-pulse
+    "
+    >
+      👑 Premium Founder
+    </span>
+  )}
+</div>
 
   <p className="mt-2 text-indigo-100">
     Manage startups, opportunities and track applicants.

@@ -73,9 +73,26 @@ const Navbar = () => {
                   {dbUser?.name || user?.displayName || "User"}
                 </p>
 
-                <p className="text-xs text-gray-500 capitalize">
-                  {dbUser?.role}
-                </p>
+               <p className="text-xs text-gray-500 capitalize flex items-center gap-1">
+  {dbUser?.isPremiumFounder && (
+    <span
+      className="
+      px-2 py-0.5
+      rounded-full
+      bg-gradient-to-r
+      from-yellow-400
+      to-orange-500
+      text-white
+      text-[10px]
+      font-bold
+    "
+    >
+      👑 PRO
+    </span>
+  )}
+
+  {dbUser?.role}
+</p>
               </div>
 
               

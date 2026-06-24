@@ -174,7 +174,24 @@ const deleteStartup = async (id) => {
               className="p-5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex justify-between items-center hover:bg-white/15 transition"
             >
               <div>
-               <p className="font-bold text-white">
+               <p className="font-bold text-white flex items-center gap-2">
+  {u.role === "founder" && u.isPremiumFounder && (
+    <span
+      className="
+      px-2 py-0.5
+      rounded-full
+      bg-gradient-to-r
+      from-yellow-400
+      to-orange-500
+      text-white
+      text-[10px]
+      font-bold
+    "
+    >
+      👑 PREMIUM
+    </span>
+  )}
+
   {u.name}
 </p>
 

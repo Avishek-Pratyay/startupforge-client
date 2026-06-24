@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
-
+import Swal from "sweetalert2";
 const AddOpportunity = () => {
   const { dbUser } = useAuth();
 
@@ -70,14 +70,35 @@ const payload = {
         industry: "",
         deadline: "",
       });
-    } catch (err) {
-      console.log("CREATE OPPORTUNITY ERROR:", err);
+    }catch (err) {
+  console.log(err);
 
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to create opportunity"
-      );
-    } finally {
+  if (err?.response?.data?.premiumRequired) {
+
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Premium Required",
+      text:
+        "You have already posted 3 opportunities. Upgrade to Premium Founder to continue posting.",
+      confirmButtonText: "Upgrade Now",
+      showCancelButton: true,
+      cancelButtonText: "Later",
+    });
+
+    if (result.isConfirmed) {
+      window.location.href =
+        "/premium-upgrade";
+    }
+
+    return;
+  }
+
+  toast.error(
+    err?.response?.data?.message ||
+      "Failed to create opportunity"
+  );
+}
+finally {
       setLoading(false);
     }
   };

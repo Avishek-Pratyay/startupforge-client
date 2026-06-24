@@ -24,6 +24,8 @@ import EditOpportunity from "../pages/FounderDashboard/EditOpportunity";
 import CollaboratorDashboard from "../pages/CollaboratorDashboard/CollaboratorDashboard";
 import OpportunityDetails from "../pages/OpportunityDetails/OpportunityDetails";
 import StartupDetails from "../pages/StartupDetails/StartupDetails";
+import PremiumUpgrade from "../pages/PremiumUpgrade/PremiumUpgrade";
+import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess";
 import DashboardLayout from "../layouts/DashboardLayout";
 const router = createBrowserRouter([
   {
@@ -42,6 +44,22 @@ const router = createBrowserRouter([
       <AdminRoute>
         <AdminDashboard />
       </AdminRoute>
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/payment-success",
+  element: (
+    <PrivateRoute>
+      <PaymentSuccess />
+    </PrivateRoute>
+  ),
+},
+{
+  path: "/premium-upgrade",
+  element: (
+    <PrivateRoute>
+      <PremiumUpgrade />
     </PrivateRoute>
   ),
 },
