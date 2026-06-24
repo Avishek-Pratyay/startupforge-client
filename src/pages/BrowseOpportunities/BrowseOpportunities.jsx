@@ -11,6 +11,12 @@ const navigate = useNavigate();
 const [opportunities, setOpportunities] = useState([]);
 const [appliedIds, setAppliedIds] = useState([]);
 
+const [search, setSearch] = useState("");
+const [workType, setWorkType] = useState("");
+const [industry, setIndustry] = useState("");
+
+const [page, setPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
 const [showModal, setShowModal] = useState(false);
 const [selectedOpportunity, setSelectedOpportunity] = useState(null);
 
@@ -20,20 +26,27 @@ motivation: "",
 });
 
 useEffect(() => {
-const fetchOpportunities = async () => {
-try {
-const res = await api.get("/opportunities");
-setOpportunities(res.data.opportunities || []);
-} catch (error) {
-console.log(error);
-}
-};
+  const fetchOpportunities = async () => {
+    try {
+      const res = await api.get("/opportunities", {
+        params: {
+          search,
+          workType,
+          industry,
+          page,
+          limit: 6,
+        },
+      });
 
+      setOpportunities(res.data.opportunities || []);
+      setTotalPages(res.data.totalPages || 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-fetchOpportunities();
-
-
-}, []);
+  fetchOpportunities();
+}, [search, workType, industry, page]);
 
 useEffect(() => {
 const fetchApplications = async () => {
@@ -124,6 +137,46 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indig
   <h1 className="text-5xl font-bold text-white text-center mb-12">
     Browse Opportunities
   </h1>
+
+  <div className="max-w-5xl mx-auto mb-10 grid md:grid-cols-3 gap-4">
+
+  <input
+    type="text"
+    placeholder="Search role or skill..."
+    value={search}
+    onChange={(e) => {
+      setSearch(e.target.value);
+      setPage(1);
+    }}
+    className="px-4 py-3 rounded-xl border bg-white"
+  />
+
+  <select
+    value={workType}
+    onChange={(e) => {
+      setWorkType(e.target.value);
+      setPage(1);
+    }}
+    className="px-4 py-3 rounded-xl border bg-white"
+  >
+    <option value="">All Work Types</option>
+    <option value="Remote">Remote</option>
+    <option value="Onsite">Onsite</option>
+    <option value="Hybrid">Hybrid</option>
+  </select>
+
+  <input
+    type="text"
+    placeholder="Industry"
+    value={industry}
+    onChange={(e) => {
+      setIndustry(e.target.value);
+      setPage(1);
+    }}
+    className="px-4 py-3 rounded-xl border bg-white"
+  />
+
+</div>
 
   {opportunities.length === 0 ? (
     <p className="text-center text-gray-300">
@@ -243,7 +296,31 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indig
       </div>
     </div>
   )}
+  <div className="flex justify-center gap-3 mt-10">
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(page - 1)}
+    className="px-4 py-2 bg-white rounded-xl disabled:opacity-50"
+  >
+    Previous
+  </button>
+
+  <span className="text-white flex items-center">
+    Page {page}
+  </span>
+
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(page + 1)}
+    className="px-4 py-2 bg-white rounded-xl disabled:opacity-50"
+  >
+    Next
+  </button>
 </div>
+</div>
+
+
+
 
 
 );
