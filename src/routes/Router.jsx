@@ -47,14 +47,7 @@ const router = createBrowserRouter([
     </PrivateRoute>
   ),
 },
-{
-  path: "/payment-success",
-  element: (
-    <PrivateRoute>
-      <PaymentSuccess />
-    </PrivateRoute>
-  ),
-},
+
 {
   path: "/premium-upgrade",
   element: (
