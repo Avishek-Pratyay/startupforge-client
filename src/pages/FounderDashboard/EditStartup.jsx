@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 const EditStartup = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const EditStartup = () => {
     try {
       await api.patch(`/startups/${id}`, formData);
 
-      alert("Startup updated successfully");
+      toast.success("Startup updated successfully");
       navigate("/founder-dashboard");
     } catch (error) {
       console.log(error);

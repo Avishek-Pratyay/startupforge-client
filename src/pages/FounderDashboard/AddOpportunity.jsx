@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const AddOpportunity = () => {
   const { dbUser } = useAuth();
@@ -26,7 +27,7 @@ const AddOpportunity = () => {
     e.preventDefault();
 
     if (!dbUser?.email) {
-      alert("Please login first");
+      toast.error("Please login first");
       return;
     }
 
@@ -53,7 +54,7 @@ const AddOpportunity = () => {
 
       await api.post("/opportunities", payload);
 
-      alert("Opportunity created successfully!");
+      toast.success("Opportunity created successfully!");
 
       setFormData({
         role_title: "",
@@ -65,7 +66,7 @@ const AddOpportunity = () => {
     } catch (err) {
       console.log("CREATE OPPORTUNITY ERROR:", err);
 
-      alert(
+      toast.error(
         err?.response?.data?.message ||
           "Failed to create opportunity"
       );
