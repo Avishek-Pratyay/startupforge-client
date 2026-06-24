@@ -9,12 +9,15 @@ const AddOpportunity = () => {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    role_title: "",
-    required_skills: "",
-    work_type: "",
-    industry: "",
-    deadline: "",
-  });
+  role_title: "",
+  required_skills: "",
+  work_type: "",
+  industry: "",
+  deadline: "",
+
+  startup_name: "",
+  startup_id: "",
+});
 
   const handleChange = (e) => {
     setFormData({
@@ -34,21 +37,25 @@ const AddOpportunity = () => {
     setLoading(true);
 
     try {
-      const payload = {
-        role_title: formData.role_title,
-        required_skills: formData.required_skills
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+const payload = {
+  role_title: formData.role_title,
 
-        work_type: formData.work_type,
-        industry: formData.industry,
-        deadline: formData.deadline,
+  required_skills: formData.required_skills
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
 
-        // IMPORTANT FIX
-        startup_id: "manual",
-        founderEmail: dbUser.email,
-      };
+  work_type: formData.work_type,
+  industry: formData.industry,
+  deadline: formData.deadline,
+
+  // IMPORTANT
+  founderEmail: dbUser.email,
+  founderName: dbUser.name,
+
+  startup_id: formData.startup_id,
+  startup_name: formData.startup_name,
+};
 
       console.log("Sending opportunity:", payload);
 
@@ -75,82 +82,220 @@ const AddOpportunity = () => {
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto p-6">
+  
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800">
-          Create Opportunity
+  return (
+  <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-8">
+
+    <div className="max-w-5xl mx-auto">
+
+      {/* HERO */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white shadow-2xl mb-8">
+
+        <h1 className="text-4xl font-bold">
+          Create New Opportunity
         </h1>
-        <p className="text-gray-500 mt-1">
-          Find talented collaborators for your startup
+
+        <p className="mt-3 text-indigo-100">
+          Find talented developers, designers and collaborators for your startup.
         </p>
+
       </div>
 
+      {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white border rounded-2xl p-6 shadow-sm space-y-5"
+        className="
+          bg-white/10
+          backdrop-blur-xl
+          border border-white/10
+          rounded-3xl
+          p-8
+          shadow-2xl
+          space-y-6
+        "
       >
 
-        <input
-          name="role_title"
-          placeholder="Role Title"
-          value={formData.role_title}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-          required
-        />
+        {/* Founder Info */}
+        <div className="bg-white/5 rounded-2xl p-5">
 
-        <input
-          name="required_skills"
-          placeholder="React, Node.js"
-          value={formData.required_skills}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-          required
-        />
+          <h3 className="text-white font-semibold text-lg mb-3">
+            Founder Information
+          </h3>
 
-        <select
-          name="work_type"
-          value={formData.work_type}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-          required
-        >
-          <option value="">Work Type</option>
-          <option value="Remote">Remote</option>
-          <option value="Onsite">Onsite</option>
-          <option value="Hybrid">Hybrid</option>
-        </select>
+          <p className="text-indigo-200">
+            Founder: {dbUser?.name}
+          </p>
 
-        <input
-          name="industry"
-          placeholder="Industry"
-          value={formData.industry}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-          required
-        />
+          <p className="text-indigo-300 text-sm">
+            {dbUser?.email}
+          </p>
 
-        <input
-          type="date"
-          name="deadline"
-          value={formData.deadline}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-          required
-        />
+        </div>
 
+        {/* Startup Name */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Startup Name
+          </label>
+
+          <input
+            type="text"
+            name="startup_name"
+            value={formData.startup_name}
+            onChange={handleChange}
+            placeholder="StartupForge AI"
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          />
+
+        </div>
+
+        {/* Startup ID */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Startup ID
+          </label>
+
+          <input
+            type="text"
+            name="startup_id"
+            value={formData.startup_id}
+            onChange={handleChange}
+            placeholder="Optional startup ID"
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+          />
+
+        </div>
+
+        {/* Role */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Position Title
+          </label>
+
+          <input
+            name="role_title"
+            value={formData.role_title}
+            onChange={handleChange}
+            placeholder="Frontend Developer"
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          />
+
+        </div>
+
+        {/* Skills */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Required Skills
+          </label>
+
+          <input
+            name="required_skills"
+            value={formData.required_skills}
+            onChange={handleChange}
+            placeholder="React, Tailwind, Node.js"
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          />
+
+          <p className="text-indigo-200 text-sm mt-2">
+            Separate skills using commas.
+          </p>
+
+        </div>
+
+        {/* Work Type */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Work Type
+          </label>
+
+          <select
+            name="work_type"
+            value={formData.work_type}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          >
+            <option value="">Select Work Type</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Onsite">Onsite</option>
+          </select>
+
+        </div>
+
+        {/* Industry */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Industry
+          </label>
+
+          <input
+            name="industry"
+            value={formData.industry}
+            onChange={handleChange}
+            placeholder="AI, SaaS, FinTech"
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          />
+
+        </div>
+
+        {/* Deadline */}
+        <div>
+
+          <label className="block text-white mb-2 font-medium">
+            Application Deadline
+          </label>
+
+          <input
+            type="date"
+            name="deadline"
+            value={formData.deadline}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl bg-white border"
+            required
+          />
+
+        </div>
+
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold disabled:opacity-50"
+          className="
+            w-full
+            py-4
+            rounded-xl
+            bg-gradient-to-r
+            from-indigo-600
+            via-purple-600
+            to-pink-500
+            text-white
+            font-bold
+            text-lg
+            hover:scale-[1.01]
+            transition
+          "
         >
-          {loading ? "Creating..." : "Create Opportunity"}
+          {loading ? "Creating Opportunity..." : "🚀 Create Opportunity"}
         </button>
+
       </form>
+
     </div>
-  );
+
+  </div>
+);
 };
 
 export default AddOpportunity;
