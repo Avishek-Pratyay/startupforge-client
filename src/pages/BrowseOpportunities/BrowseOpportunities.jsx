@@ -198,6 +198,11 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indig
                 {op.role_title}
               </h2>
             </Link>
+            <Link to={`/opportunities/${op._id}`}>
+              <h2 className="text-xl font- text-white hover:text-indigo-300">
+                {op.startup_name}
+              </h2>
+            </Link>
 
             <div className="mt-2 text-sm text-gray-300">
               {op.work_type} • {op.industry}

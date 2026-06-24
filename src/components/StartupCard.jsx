@@ -19,6 +19,9 @@ const StartupCard = ({ startup }) => {
       <p className="text-gray-600">
         Founder: {startup.founderEmail}
       </p>
+      <p className="text-gray-600">
+        Founder: {startup.founderName}
+      </p>
 
     </div>
   );

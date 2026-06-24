@@ -88,7 +88,7 @@ const deleteStartup = async (id) => {
 <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-6">
   <div className="max-w-7xl mx-auto">
       {/* HEADER */}
-      <h1 className="text-3xl font-bold mb-6">
+      <h1 className="text-3xl text-white font-bold mb-6">
         Admin Dashboard
       </h1>
 
@@ -243,8 +243,8 @@ const deleteStartup = async (id) => {
               className="p-5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex justify-between items-center hover:bg-white/15 transition"
             >
               <div>
-                <p className="text-red">
-  {s.startup_name}
+                <p className="text-white">
+  {s.name}
 </p>
 
 <p className="text-sm text-gray-300">
