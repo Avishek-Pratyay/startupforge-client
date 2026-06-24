@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
-
+import { uploadImage } from "../../utils/imageUpload";
 const Profile = () => {
   const { dbUser } = useAuth();
 
   const [form, setForm] = useState({
     name: "",
     image: "",
+    imageFile: null,
     skills: "",
     bio: "",
   });
@@ -27,12 +28,18 @@ const Profile = () => {
   }, [dbUser]);
 
   const handleChange = (e) => {
+  if (e.target.type === "file") {
+    setForm({
+      ...form,
+      imageFile: e.target.files[0],
+    });
+  } else {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
-  };
-
+  }
+};
   const handleUpdate = async (e) => {
     e.preventDefault();
 
@@ -43,10 +50,15 @@ const Profile = () => {
         toast.error("User information not loaded");
         return;
       }
+      let imageUrl = form.image;
+
+if (form.imageFile) {
+  imageUrl = await uploadImage(form.imageFile);
+}
 
       const payload = {
         name: form.name,
-        image: form.image,
+        image: imageUrl,
         skills: form.skills
           .split(",")
           .map((s) => s.trim())
@@ -101,9 +113,10 @@ const Profile = () => {
           <div className="flex justify-center mb-8">
             <img
               src={
-                form.image ||
-                "https://i.ibb.co/4pDNDk1/avatar.png"
-              }
+  form.image ||
+  dbUser?.image ||
+  "https://i.ibb.co/4pDNDk1/avatar.png"
+}
               alt="profile"
               className="w-28 h-28 rounded-full border-4 border-indigo-500 object-cover"
             />
@@ -145,12 +158,11 @@ const Profile = () => {
               </p>
 
               <input
-                name="image"
-                value={form.image}
-                onChange={handleChange}
-                placeholder="https://example.com/photo.jpg"
-                className="w-full rounded-xl bg-white/10 border border-white/20 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+  type="file"
+  accept="image/*"
+  onChange={handleChange}
+  className="w-full rounded-xl bg-white/10 border border-white/20 text-white px-4 py-3"
+/>
             </div>
 
             {/* SKILLS */}

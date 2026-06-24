@@ -16,7 +16,8 @@ const AdminDashboard = () => {
   const loadAll = async () => {
     try {
       const [s, u, st, t] = await Promise.all([
-        api.get("/admin-stats"),
+        //api.get("/admin-stats"),
+        api.get("/admin-overview"),
         api.get("/admin/users"),
         api.get("/admin/startups"),
         api.get("/transactions"),

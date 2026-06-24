@@ -2,43 +2,58 @@ import { useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
-
+import { uploadImage } from "../../utils/imageUpload";
 const AddStartup = () => {
   const { dbUser } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
+    logo: null,
     industry: "",
     description: "",
   });
 
-  const handleChange = (e) => {
+ const handleChange = (e) => {
+  if (e.target.type === "file") {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.files[0],
+    });
+  } else {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  };
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      await api.post("/startups", {
-        ...formData,
-        founderEmail: dbUser.email,
-        founderName: dbUser.name,
-      });
+  try {
+    const logoUrl = formData.logo
+      ? await uploadImage(formData.logo)
+      : "";
 
-      toast.success("Startup created successfully!");
-      setFormData({
-        name: "",
-        industry: "",
-        description: "",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    await api.post("/startups", {
+      ...formData,
+      logo: logoUrl,
+      founderEmail: dbUser.email,
+      founderName: dbUser.name,
+    });
+
+    toast.success("Startup created successfully!");
+
+    setFormData({
+      name: "",
+      logo: null,
+      industry: "",
+      description: "",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 return (
 
@@ -123,13 +138,12 @@ return (
       </label>
 
       <input
-        type="text"
-        name="logo"
-        value={formData.logo}
-        onChange={handleChange}
-        placeholder="https://..."
-        className="w-full px-4 py-3 rounded-xl bg-white border"
-      />
+  type="file"
+  name="logo"
+  accept="image/*"
+  onChange={handleChange}
+  className="w-full px-4 py-3 rounded-xl bg-white border"
+/>
 
     </div>
 

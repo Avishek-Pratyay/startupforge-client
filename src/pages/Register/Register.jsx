@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { uploadImage } from "../../utils/imageUpload";
 import toast from "react-hot-toast";
 import { FaGoogle, FaUser, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
 
@@ -23,7 +23,9 @@ const Register = () => {
     const form = e.target;
 
     const name = form.name.value;
-    const photo = form.photo.value;
+    const imageFile = form.photo.files[0];
+
+const photo = await uploadImage(imageFile);
     const email = form.email.value;
     const password = form.password.value;
     const role = form.role.value;
@@ -137,11 +139,12 @@ const Register = () => {
           <div className="relative">
             <FaImage className="absolute left-3 top-3 text-gray-400" />
             <input
-              name="photo"
-              placeholder="Photo URL"
-              className="w-full pl-10 py-3 rounded-xl bg-white/10 text-white border border-white/20"
-              required
-            />
+  type="file"
+  name="photo"
+  accept="image/*"
+  className="w-full pl-10 py-3 rounded-xl bg-white/10 text-white border border-white/20"
+  required
+/>
           </div>
 
           <div className="relative">
