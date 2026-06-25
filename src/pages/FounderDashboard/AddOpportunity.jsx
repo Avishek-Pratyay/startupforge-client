@@ -312,8 +312,7 @@ finally {
             hover:scale-[1.01]
             transition
           "
-        >
-          {loading ? "Creating Opportunity..." : "🚀 Create Opportunity"}
+        >{loading ? "Creating Opportunity..." : "🚀 Create Opportunity"}
         </button>
 
       </form>

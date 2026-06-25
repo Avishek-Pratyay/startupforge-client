@@ -2,9 +2,13 @@ import { useState } from "react";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../utils/imageUpload";
 const AddStartup = () => {
   const { dbUser } = useAuth();
+
+  const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +33,8 @@ const AddStartup = () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+    setLoading(true);
+
 
   try {
     const logoUrl = formData.logo
@@ -44,6 +50,8 @@ const handleSubmit = async (e) => {
 
     toast.success("Startup created successfully!");
 
+    setTimeout(()=>{
+    navigate("/founder-dashboard");},1000);
     setFormData({
       name: "",
       logo: null,
@@ -53,6 +61,8 @@ const handleSubmit = async (e) => {
   } catch (error) {
     console.log(error);
   }
+   finally {
+    setLoading(false);}
 };
 
 return (
@@ -250,25 +260,25 @@ return (
 
     {/* Button */}
 
-    <button
-      type="submit"
-      className="
-        w-full
-        py-4
-        rounded-xl
-        bg-gradient-to-r
-        from-indigo-600
-        via-purple-600
-        to-pink-500
-        text-white
-        font-bold
-        text-lg
-        hover:scale-[1.01]
-        transition
-      "
-    >
-      🚀 Create Startup
-    </button>
+          <button
+          type="submit"
+          disabled={loading}
+          className="
+            w-full
+            py-4
+            rounded-xl
+            bg-gradient-to-r
+            from-indigo-600
+            via-purple-600
+            to-pink-500
+            text-white
+            font-bold
+            text-lg
+            hover:scale-[1.01]
+            transition
+          "
+        >{loading ? "Creating Startup..." : "🚀 Create Startup"}
+        </button>
 
   </form>
 
