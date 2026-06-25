@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
-
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 const OpportunityDetails = () => {
   const { id } = useParams();
   const { dbUser } = useAuth();
 
+  const navigate = useNavigate();
   const [opportunity, setOpportunity] = useState(null);
 
   // modal states
@@ -33,7 +35,7 @@ const OpportunityDetails = () => {
   // OPEN MODAL
   const handleApplyClick = () => {
     if (!dbUser?.email) {
-      alert("Please login first");
+toast.error("Please login first");
       return;
     }
 
@@ -46,28 +48,50 @@ const OpportunityDetails = () => {
   };
 
   // SUBMIT APPLICATION
-  const submitApplication = async () => {
-    try {
-      await api.post("/applications", {
-        opportunity_id: id,
-        applicant_email: dbUser.email,
-        portfolio_link: applicationForm.portfolio_link,
-        motivation: applicationForm.motivation,
-      });
+ const submitApplication = async () => {
+  try {
+    await api.post("/applications", {
+      opportunity_id: id,
+      applicant_email: dbUser.email,
+      portfolio_link: applicationForm.portfolio_link,
+      motivation: applicationForm.motivation,
+    });
 
-      alert("Application submitted successfully!");
-      setShowModal(false);
-    } catch (err) {
-      console.log(err);
-      alert(err?.response?.data?.message || "Application failed");
-    }
-  };
+    toast.success("Application submitted successfully!");
+
+    setShowModal(false);
+
+    setTimeout(() => {
+      navigate("/browse-opportunities");
+    }, 1200);
+
+  } catch (err) {
+    console.log(err);
+
+    toast.error(
+      err?.response?.data?.message ||
+      "Application failed"
+    );
+  }
+};
 
   if (!opportunity) return <p className="p-10">Loading...</p>;
 
   return (
-    <div className="p-10 max-w-3xl mx-auto">
+<div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 p-8">
+  <div className="max-w-4xl mx-auto">
 
+    <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white shadow-2xl mb-8">
+      <h1 className="text-4xl font-bold">
+        Opportunity Details
+      </h1>
+
+      <p className="mt-2 text-indigo-100">
+        Explore this opportunity and apply to join the startup.
+      </p>
+    </div>
+
+    <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white shadow-2xl">
       {/* OPPORTUNITY INFO */}
       <h1 className="text-3xl font-bold">
         {opportunity.role_title}
@@ -93,7 +117,20 @@ const OpportunityDetails = () => {
       {/* APPLY BUTTON */}
       <button
         onClick={handleApplyClick}
-        className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-xl"
+        className="
+mt-8
+bg-gradient-to-r
+from-indigo-600
+via-purple-600
+to-pink-500
+text-white
+px-8
+py-3
+rounded-xl
+font-semibold
+hover:scale-105
+transition
+"
       >
         Apply Now
       </button>
@@ -101,13 +138,52 @@ const OpportunityDetails = () => {
       {/* ================= MODAL ================= */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
+<div
+  className="
+  relative
+  bg-slate-900
+  border border-indigo-500/30
+  text-white
+  w-full
+  max-w-xl
+  rounded-3xl
+  p-8
+  shadow-2xl
+"
+>
+
+  <button
+    onClick={() => setShowModal(false)}
+    className="
+      absolute
+      top-4
+      right-4
+      text-2xl
+      text-gray-400
+      hover:text-red-400
+      transition
+    "
+  >
+    ✕
+  </button>
 
             <h2 className="text-2xl font-bold mb-2">
               Apply for Opportunity
             </h2>
 
-            <p className="text-gray-500 mb-6">
+            <p className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+focus:outline-none
+focus:ring-2
+focus:ring-indigo-500
+">
               {opportunity.role_title}
             </p>
 
@@ -174,7 +250,12 @@ const OpportunityDetails = () => {
         </div>
       )}
     </div>
+        </div>
+  </div>
+
+    
   );
+  
 };
 
 export default OpportunityDetails;
