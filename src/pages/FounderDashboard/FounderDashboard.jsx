@@ -25,24 +25,37 @@ const [applications, setApplications] = useState([]);
 
     // My startups
     api.get("/startups").then((res) => {
-      const myStartups = res.data.filter(
-        (s) => s.founderEmail === dbUser.email
-      );
-      setStartups(myStartups);
+const myStartups = res.data
+  .filter((s) => s.founderEmail === dbUser.email)
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+setStartups(myStartups);
     });
 
     // My opportunities
     api.get("/opportunities").then((res) => {
-      const myOpps = res.data.opportunities.filter(
-        (o) => o.founderEmail === dbUser.email
-      );
-      setOpportunities(myOpps);
+const myOpps = res.data.opportunities
+  .filter((o) => o.founderEmail === dbUser.email)
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+setOpportunities(myOpps);
     });
-    api.get(
-  `/founder-applications/${dbUser.email}`
-).then((res) => {
-  setApplications(res.data);
-});
+api.get(`/founder-applications/${dbUser.email}`)
+  .then((res) => {
+    const sortedApplications = res.data.sort(
+      (a, b) =>
+        new Date(b.applied_at) -
+        new Date(a.applied_at)
+    );
+
+    setApplications(sortedApplications);
+  });
   }, [dbUser]);
   const handleDeleteStartup = async (id) => {
   const result = await Swal.fire({

@@ -3,8 +3,10 @@ import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const AddOpportunity = () => {
   const { dbUser } = useAuth();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
@@ -63,6 +65,9 @@ const payload = {
 
       toast.success("Opportunity created successfully!");
 
+      setTimeout(()=>{
+      navigate("/founder-dashboard");
+      },1000);
       setFormData({
         role_title: "",
         required_skills: "",

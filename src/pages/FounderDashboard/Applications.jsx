@@ -51,10 +51,16 @@ const pendingCount = applications.filter(
         (op) => op._id
       );
 
-      const myApplications = appRes.data.filter(
-        (app) =>
-          myOpportunityIds.includes(app.opportunity_id)
-      );
+      const myApplications = appRes.data
+  .filter(
+    (app) =>
+      myOpportunityIds.includes(app.opportunity_id)
+  )
+  .sort(
+    (a, b) =>
+      new Date(b.applied_at) -
+      new Date(a.applied_at)
+  );
 
       setApplications(myApplications);
       setOpportunities(myOpportunities);

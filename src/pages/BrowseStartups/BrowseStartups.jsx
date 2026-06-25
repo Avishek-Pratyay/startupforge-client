@@ -11,13 +11,18 @@ const [loading, setLoading] = useState(true);
         setLoading(true);
         const res = await api.get("/startups");
 
-        const approved = res.data.filter(
-          (item) =>
-            item.status === "Approved" ||
-            item.status === "approved"
-        );
+const approved = res.data
+  .filter(
+    (item) =>
+      item.status === "Approved" ||
+      item.status === "approved"
+  )
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
-        setStartups(approved);
+setStartups(approved);
       } catch (error) {
         console.log(error);
       }

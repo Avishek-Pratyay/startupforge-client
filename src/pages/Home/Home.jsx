@@ -23,11 +23,18 @@ useEffect(() => {
       setStartups(
         startupRes.data
           .filter((s) => s.status === "Approved" || s.status === "approved")
+          .sort(
+      (a, b) =>
+        new Date(b.createdAt) - new Date(a.createdAt)
+    )
           .slice(0, 3)
       );
 
       setOpportunities(
-        oppRes.data.opportunities.slice(0, 3)
+        oppRes.data.opportunities .sort(
+      (a, b) =>
+        new Date(b.createdAt) - new Date(a.createdAt)
+    ).slice(0, 3)
       );
     } catch (error) {
       console.log(error);

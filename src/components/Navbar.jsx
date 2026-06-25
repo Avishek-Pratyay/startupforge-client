@@ -1,11 +1,22 @@
-import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";import useAuth from "../hooks/useAuth";
 import { useState } from "react";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 
 const Navbar = () => {
 const { user, dbUser, logoutUser } = useAuth();
 const [sidebarOpen, setSidebarOpen] = useState(false);
+const navigate = useNavigate();
+const handleLogout = async () => {
+  try {
+    await logoutUser();
+
+    setSidebarOpen(false);
+
+    navigate("/");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 return (
 <>
@@ -150,12 +161,12 @@ onClick={() => setSidebarOpen(false)}
             📊 Dashboard
           </Link>
 
-          <button
-            onClick={logoutUser}
-            className="mt-6 px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition"
-          >
-            Logout
-          </button>
+<button
+  onClick={handleLogout}
+  className="mt-6 px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition"
+>
+  Logout
+</button>
         </>
       )}
     </div>
@@ -269,12 +280,12 @@ onClick={() => setSidebarOpen(false)}
               Dashboard
             </Link>
 
-            <button
-              onClick={logoutUser}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-100"
-            >
-              Logout
-            </button>
+<button
+  onClick={handleLogout}
+  className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+>
+  Logout
+</button>
           </>
         )}
       </div>
